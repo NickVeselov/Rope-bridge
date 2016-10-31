@@ -1,0 +1,7 @@
+﻿  main.cpp
+d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(661): error C2061: syntax error: identifier 'btHingeConstraint'
+d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(663): error C2065: 'world': undeclared identifier
+d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(663): error C2227: left of '->addConstraint' must point to class/struct/union/generic type
+  d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(663): note: type is 'unknown-type'
+d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(663): error C2065: 'c': undeclared identifier
+d:\game development\study\examples\octet\octet\src\scene\../scene/visual_scene.h(663): error C2065: 'disableCollisions': undeclared identifier
