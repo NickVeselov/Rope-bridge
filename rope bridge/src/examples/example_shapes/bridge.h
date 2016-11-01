@@ -1,6 +1,12 @@
 #pragma once
 namespace octet
 {
+	enum object_type
+	{
+		plank,
+		cliff,
+	};
+	
 	class Bridge
 	{
 		//scene
@@ -8,86 +14,151 @@ namespace octet
 		mat4t mat;
 
 		float distance_between;
+
+		//plank model
+		vec3 plank_size;
+		material *plank_material;
+
+		//cliff
+		material *cliff_material;
 		vec3 cliff_size;
+
+		mesh_instance *left_cliff_mesh;
+		vec3 left_cliff_location;
+		btRigidBody *left_cliff_rb;
+
+		mesh_instance *right_cliff_mesh;
+		vec3 right_cliff_location;
+		btRigidBody *right_cliff_rb;
+
+		int size;
+		float ground_level;
 		
-
-		//brick model
-		vec3 brick_size;
-
-		btRigidBody *create_hinged_body(btRigidBody *previous_rb, vec3 location, int id)
+		void set_variables()
 		{
-			material *brick_material = new material(vec4(1, 0, 0, 1));
+			distance_between = 4.0f;
 
-			//create mesh
+			plank_size = vec3(1, 0.5f, 6);
+			plank_material = new material(vec4(1, 0, 0, 1));
+
+			cliff_material = new material(vec4(0, 0, 1, 1));
+			cliff_size = vec3(5, 10, 10);
+
+		}
+
+		void create_cliffs(int size)
+		{
+			mat.loadIdentity();
+			left_cliff_location = vec3(-10, cliff_size.y() + ground_level, 0);
+			mat.translate(left_cliff_location);
+			left_cliff_mesh = app_scene->add_shape(mat, new mesh_box(cliff_size), cliff_material,false);
+			left_cliff_rb = left_cliff_mesh->get_node()->get_rigid_body();
+
+			mat.loadIdentity();
+			right_cliff_location = vec3(left_cliff_location.x() + distance_between + plank_size.x()/2.f + cliff_size.x()/2.f + (size - 1)*(distance_between + cliff_size.x()/2.f),
+				left_cliff_location.y(), left_cliff_location.z());
+			mat.translate(right_cliff_location);
+			right_cliff_mesh = app_scene->add_shape(mat, new mesh_box(cliff_size), cliff_material, false);
+			right_cliff_rb = right_cliff_mesh->get_node()->get_rigid_body();
+		}
+
+
+		btRigidBody *create_plank(vec3 location)
+		{
 			mat.loadIdentity();
 			mat.translate(location);
-			mesh_instance *mesh;
-			if (id != -1)
-				mesh = app_scene->add_shape(mat, new mesh_box(vec3(brick_size)), brick_material, true);
-			else
-				mesh = app_scene->add_shape(mat, new mesh_box(vec3(cliff_size)), new material(vec4(0, 0, 1, 1)), true, 100.f);
-			//rigid body
-			btRigidBody *current_rb = mesh->get_node()->get_rigid_body();
+			mesh_instance *mesh = app_scene->add_shape(mat, new mesh_box(vec3(plank_size)), plank_material, true);
+			return mesh->get_node()->get_rigid_body();
+		}
 
-			btVector3 axisA(0.f, 1.f, 0.f);
-			btVector3 axisB(0.f, 1.f, 0.f);
-			btVector3 pivotA;
-			btVector3 pivotB;
-			if (id == 0)
-				pivotA = btVector3((cliff_size.x() + distance_between) / 2.f, cliff_size.y() - brick_size.y(), 0.f);
+		void bind_bodies(btRigidBody *previous_rb, object_type previos_type, btRigidBody *current_rb, object_type current_type)
+		{
+			float previous_object_width = 0.f,
+				previous_vertical_align = 0.f,
+				current_object_width = 0.f,
+				current_vertical_align = 0.f;
+				
+			if (previos_type == plank)
+			{
+				previous_object_width = plank_size.x();
+			}
 			else
-				pivotA = btVector3((brick_size.x() + distance_between) / 2.f, 0.f, 0.f);
+			{
+				previous_object_width = cliff_size.x();
+				previous_vertical_align = cliff_size.y() - plank_size.y();
 
-			if (id != -1)
-				pivotB = btVector3(-(brick_size.x() + distance_between) / 2.f, 0.f, 0.f);
+			}
+
+			if (current_type == plank)
+			{
+				current_object_width = plank_size.x();
+			}
 			else
-				pivotB = btVector3(-(cliff_size.x() + distance_between) / 2.f, cliff_size.y() - brick_size.y(), 0.f);
-
+			{
+				current_object_width = cliff_size.x();
+				current_vertical_align = cliff_size.y() - plank_size.y();
+			}
+			btVector3 pivotA((previous_object_width + distance_between) / 2.f, previous_vertical_align, 0.f);
+			btVector3 pivotB(-(current_object_width + distance_between) / 2.f, current_vertical_align, 0.f);
+			btVector3 axisA(0.f, 0.f, 1.f);
+			btVector3 axisB(0.f, 0.f, 1.f);
 
 			btHingeConstraint *hinge = new btHingeConstraint(*previous_rb, *current_rb, pivotA, pivotB, axisA, axisB);
-			hinge->setDbgDrawSize(btScalar(5.f));
+			hinge->setDbgDrawSize(btScalar(distance_between));
+			hinge->setLimit(-0.5f*SIMD_HALF_PI, 0.5f*SIMD_HALF_PI);
+			//hinge->set
 			app_scene->add_hinge_constraint(hinge, true);
-
-			return current_rb;
 		}
 
 	public:
 
-		Bridge(ref<visual_scene> App_scene, mat4t Mat)
+		Bridge(ref<visual_scene> App_scene, mat4t Mat, float Ground_level)
 		{
 			app_scene = App_scene;
 			mat = Mat;
+			ground_level = Ground_level;
+			set_variables();
 		}
 
-		void create_bridge(int bricks_number)
+
+		void create_bridge(int planks_number)
 		{
-			material *cliff = new material(vec4(0, 0, 1, 1));
-			distance_between = 4.f;
-			vec3 left_cliff_location = vec3(-10, 5, -5);
-			cliff_size = vec3(5, 10, 10);
+			create_cliffs(planks_number);
 
-			mat.loadIdentity();
-			mat.translate(left_cliff_location);
-			mesh_instance *left_cliff_mesh = app_scene->add_shape(mat, new mesh_box(cliff_size), cliff, true, 100.f);
-			btRigidBody *left_cliff_rb = left_cliff_mesh->get_node()->get_rigid_body();
+			//cliff-bridge hinge
+			vec3 location = vec3(left_cliff_location.x() + distance_between + plank_size.x()/2.f + cliff_size.x()/2.f,
+				left_cliff_location.y() + cliff_size.y() - plank_size.y(), left_cliff_location.z());
+			
+			
 
-			vec3 brick_size = vec3(1, 1, 6);
-			//bank-bridge hinge
-			vec3 location = vec3(left_cliff_location.x() + distance_between, left_cliff_location.y() + cliff_size.y() - brick_size.y(), left_cliff_location.z());
-			btRigidBody *previous_body = create_hinged_body(left_cliff_rb, location, 0);
+			btRigidBody *previous_body = create_plank(location);
+			bind_bodies(left_cliff_rb, cliff, previous_body, plank);
 
+			btRigidBody *current_body;
+			for (int i = 1; i < planks_number; i++)
+			{
+				location = vec3(location.x() + distance_between, location.y(), location.z());
+				current_body = create_plank(location);
+				bind_bodies(previous_body, plank, current_body, plank);
+				previous_body = current_body;
+			}
 
-			//for (int i = 1; i < bricks_number; i++)
-			//{
-			//	location = vec3(location.x() + distance_between, location.y(), location.z());
-			//	previous_body = create_hinged_body(previous_body, location, i);
-			//}
+			location = vec3(location.x() + distance_between, location.y(), location.z());
 
-			////bridge-bank hinge
-			//location = vec3(location.x() + distance_between, location.y() - cliff_size.y() + brick_size.y(), location.z());
-			//previous_body = create_hinged_body(previous_body, location, -1);
+			btTransform frameA;
+			frameA = btTransform::getIdentity();
+			//frameA.setOrigin(btVector3(location.x() - cliff_size.x(), right_cliff_location.y() - cliff_size.y(),
+			//	right_cliff_location.z() - cliff_size.z()));
+			frameA.setOrigin(btVector3(location.x(), location.y(), location.z()));
+			//= TransformState.makePosHpr(Point3(0, 0, -5), Vec3(0, 0, -90))
 
-			//delete previous_body;
+			//bridge-bank hinge
+			bind_bodies(previous_body, plank, right_cliff_rb, cliff);
+			//btHingeConstraint *h = new btHingeConstraint(*previous_body, frameA);
+			//h->setDbgDrawSize(btScalar(distance_between));
+			//h->setLimit(-0.5f*SIMD_HALF_PI, 0.5f*SIMD_HALF_PI);
+			////h->set
+			//app_scene->add_hinge_constraint(h, true);
 		}
 
 

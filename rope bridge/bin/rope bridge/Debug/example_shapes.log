@@ -5,6 +5,6 @@ d:\game development\study\projects\rope-bridge---constraints-assignment\rope bri
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\open_source\bullet\BulletDynamics/MLCPSolvers/btDantzigLCP.cpp(1567): warning C4473: 'printf' : not enough arguments passed for format string
   d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\open_source\bullet\BulletDynamics/MLCPSolvers/btDantzigLCP.cpp(1567): note: placeholders and their parameters expect 2 variadic arguments, but 1 were provided
   d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\open_source\bullet\BulletDynamics/MLCPSolvers/btDantzigLCP.cpp(1567): note: the missing variadic argument 2 is required by format string '% s'
-d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\rope bridge.h(57): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\rope bridge.h(59): warning C4305: 'argument': truncation from 'double' to 'float'
   example_shapes.vcxproj -> D:\Game development\Study\Projects\Rope-bridge---Constraints-assignment\rope bridge\src\examples\example_shapes\..\..\..\bin\rope bridge_debug.exe
   example_shapes.vcxproj -> D:\Game development\Study\Projects\Rope-bridge---Constraints-assignment\rope bridge\src\examples\example_shapes\..\..\..\bin\rope bridge_debug.pdb (Full PDB)

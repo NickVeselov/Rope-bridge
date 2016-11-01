@@ -1,10 +1,12 @@
-#include "bridge.h"
 ////////////////////////////////////////////////////////////////////////////////
 //
 // (C) Andy Thomason 2012-2014
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+
+#include "bridge.h"
+
 namespace octet {
   /// Scene containing a box with octet.
   class example_shapes : public app {
@@ -22,7 +24,8 @@ namespace octet {
     void app_init() {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
-      app_scene->get_camera_instance(0)->get_node()->translate(vec3(1, 25, 35));
+	  //app_scene->get_camera_instance(0)->
+      app_scene->get_camera_instance(0)->get_node()->translate(vec3(10, 25, 35));
 	 // app_scene
       material *red = new material(vec4(1, 0, 0, 1));
       material *green = new material(vec4(0, 1, 0, 1));
@@ -43,11 +46,10 @@ namespace octet {
 	  // ground
 
 	  mat.loadIdentity();
-	  mat.translate(0, 0, 1);
-	  app_scene->add_shape(mat, new mesh_box(vec3(100, 1, 100)), green, false);
-	  bridge = new Bridge(app_scene, mat);
-	  bridge->create_bridge(4);
-	  //delete bridge;
+	  mat.translate(0, 0, 0);
+	  app_scene->add_shape(mat, new mesh_box(vec3(100, 2, 200)), green, false);
+	  bridge = new Bridge(app_scene, mat, 2);
+	  bridge->create_bridge(6);
     }
 
     /// this is called to draw the world
@@ -61,6 +63,9 @@ namespace octet {
 
       // draw the scene
       app_scene->render((float)vx / vy);
+
+	  //app_scene->get_camera_instance(0)->get_node()->rotate(0.1f, vec3(0, 0, 1));
+
     }
   };
 }
