@@ -28,12 +28,9 @@ namespace octet {
       app_scene->get_camera_instance(0)->get_node()->translate(vec3(10, 25, 35));
 	 // app_scene
       material *red = new material(vec4(1, 0, 0, 1));
-      material *green = new material(vec4(0, 1, 0, 1));
+      material *water = new material(vec4(0, 0, 1, 1));
       
       mat4t mat;
-      //mat.translate(-3, 6, 0);
-      //app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2),2), red, true);
-      //mat.loadIdentity();
       //mat.translate(-10, -5, 0);
       //app_scene->add_shape(mat, new mesh_box(vec3(2, 3, 2)), blue, true);
 	  //mat.loadIdentity();
@@ -47,16 +44,21 @@ namespace octet {
 
 	  mat.loadIdentity();
 	  mat.translate(0, 0, 0);
-	  app_scene->add_shape(mat, new mesh_box(vec3(100, 2, 200)), green, false);
-	  bridge = new Bridge(app_scene, mat, 2);
-	  bridge->create_bridge(6);
+	  app_scene->add_shape(mat, new mesh_box(vec3(100, 1, 200)), water, false);
+	  bridge = new Bridge(app_scene, mat, 1);
+	  bridge->create_bridge(20);
+
+	  mat.loadIdentity();
+	  mat.translate(-10, 30, 0);
+	  app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2),2), red, true);
+	  mat.loadIdentity();
     }
 
     /// this is called to draw the world
     void draw_world(int x, int y, int w, int h) {
       int vx = 0, vy = 0;
       get_viewport_size(vx, vy);
-      app_scene->begin_render(vx, vy, vec4(0.6, 0.65, 0.85, 0));
+      app_scene->begin_render(vx, vy, vec4(0.53f, 0.8f, 0.976f, 0));
 
       // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
