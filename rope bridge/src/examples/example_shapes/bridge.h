@@ -149,15 +149,15 @@ namespace octet
 
 			location = vec3(location.x() + distance_between + plank_size.x(), location.y(), location.z());
 
-			btTransform frameA;
-			frameA = btTransform::getIdentity();
-			//frameA.setOrigin(btVector3(location.x() - cliff_size.x(), right_cliff_location.y() - cliff_size.y(),
-			//	right_cliff_location.z() - cliff_size.z()));
-			frameA.setOrigin(btVector3(location.x(), location.y(), location.z()));
+			//btTransform frameA;
+			//frameA = btTransform::getIdentity();
+			////frameA.setOrigin(btVector3(location.x() - cliff_size.x(), right_cliff_location.y() - cliff_size.y(),
+			////	right_cliff_location.z() - cliff_size.z()));
+			//frameA.setOrigin(btVector3(location.x(), location.y(), location.z()));
 
-			btHingeConstraint *h = new btHingeConstraint(*previous_body, frameA);
-			h->setDbgDrawSize(btScalar(distance_between));
-			h->setLimit(-0.5f*SIMD_HALF_PI, 0.5f*SIMD_HALF_PI);
+			//btHingeConstraint *h = new btHingeConstraint(*previous_body, frameA);
+			//h->setDbgDrawSize(btScalar(distance_between));
+			//h->setLimit(-0.5f*SIMD_HALF_PI, 0.5f*SIMD_HALF_PI);
 			//app_scene->add_hinge_constraint(h, true);
 
 			//bridge-bank hinge

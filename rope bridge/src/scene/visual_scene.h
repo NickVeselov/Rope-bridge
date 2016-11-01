@@ -660,7 +660,12 @@ namespace octet { namespace scene {
 
 	void add_hinge_constraint(btHingeConstraint *c, bool disableCollisions = false)
 	{
-		world->addConstraint(c,disableCollisions);
+		world->addConstraint(c, disableCollisions);
+	}
+
+	void add_spring_constraint(btGeneric6DofSpringConstraint *c, bool disableCollisions = false)
+	{
+		world->addConstraint(c, disableCollisions);
 	}
   };
 }}

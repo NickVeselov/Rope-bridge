@@ -13,6 +13,7 @@ namespace octet {
     // scene for drawing box
     ref<visual_scene> app_scene;
 	Bridge *bridge;
+	float number = 0;
   public:
     example_shapes(int argc, char **argv) : app(argc, argv) {
     }
@@ -25,7 +26,19 @@ namespace octet {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 	  //app_scene->get_camera_instance(0)->
-      app_scene->get_camera_instance(0)->get_node()->translate(vec3(10, 25, 35));
+      app_scene->get_camera_instance(0)->get_node()->translate(vec3(10, 25, 1));
+
+	  app_scene->get_camera_instance(0)->get_node()->rotate(-40.f, vec3(1, 0, 0));
+	  //app_scene->get_camera_instance(0)->get_node()->rotate(-45.f, vec3(1, 0, 0));
+	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 45.f, 0.f));
+	 
+	  //app_scene->get_camera_instance(0)->get_node()->rotate(-60.f, vec3(0.f, 1.f, 0.f));
+	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(-55.f, 0.f, 0.f));
+
+	  //app_scene->get_camera_instance(0)->get_node()->rotate(-45.f, vec3(0, 0, 1));
+	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 0.f, 0.f));
+
+	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 45.f, 0.f));
 	 // app_scene
       material *red = new material(vec4(1, 0, 0, 1));
       material *water = new material(vec4(0, 0, 1, 1));
@@ -50,7 +63,7 @@ namespace octet {
 
 	  mat.loadIdentity();
 	  mat.translate(-10, 30, 0);
-	  app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2),2), red, true);
+	  app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2),2), red, true,10);
 	  mat.loadIdentity();
     }
 
@@ -65,9 +78,10 @@ namespace octet {
 
       // draw the scene
       app_scene->render((float)vx / vy);
-
-	  //app_scene->get_camera_instance(0)->get_node()->rotate(0.1f, vec3(0, 0, 1));
-
+	 // number += 0.5f;
+	  //app_scene->get_camera_instance(0)->get_node()->rotate(-1.f, vec3(1, 0, 0));
+	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 0.f, -0.05f));
+	  //std::cout << number << std::endl;
     }
   };
 }
