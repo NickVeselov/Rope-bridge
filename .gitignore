@@ -1,6 +1,7 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+*.VC.opendb
 
 # Folder config file
 Desktop.ini
@@ -14,7 +15,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-*.VC.opendb
 
 # Windows shortcuts
 *.lnk

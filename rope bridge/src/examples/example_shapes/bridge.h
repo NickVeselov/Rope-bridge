@@ -9,6 +9,12 @@ namespace octet
 		column
 	};
 	
+	//ball
+	struct Character
+	{
+		int collision_duration = 0;
+	};
+
 	class Bridge
 	{
 		//scene
@@ -72,7 +78,7 @@ namespace octet
 		}
 
 
-		btRigidBody *create_plank(vec3 location)
+		btRigidBody *create_plank(vec3 &location)
 		{
 			mat.loadIdentity();
 			mat.translate(location);
@@ -127,12 +133,22 @@ namespace octet
 			btVector3 axisA(0.f, 0.f, 1.f);
 			btVector3 axisB(0.f, 0.f, 1.f);
 
+			//btGeneric6DofConstraint* dof6 = new btGeneric6DofConstraint()
+				
+			previous_rb->setActivationState(DISABLE_DEACTIVATION);
+			current_rb->setActivationState(DISABLE_DEACTIVATION);
+
 			btHingeConstraint *hinge = new btHingeConstraint(*previous_rb, *current_rb, pivotA, pivotB, axisA, axisB);
-			hinge->setDbgDrawSize(btScalar(0.f));
-			hinge->setLimit(-0.f*SIMD_HALF_PI, 0.f*SIMD_HALF_PI,1.f,0.3f,0.f);
+			hinge->setDbgDrawSize(btScalar(5.f));
+			hinge->setLimit(-0.f*SIMD_HALF_PI, 0.f*SIMD_HALF_PI);// , 1.f, 0.3f, 0.f);
 			hinge->setBreakingImpulseThreshold(break_limit);
-			//hinge->set
-			app_scene->add_hinge_constraint(hinge,false);
+			//hinge->setParam(BT_CONSTRAINT_CFM, 0.f, 0);
+			hinge->setParam(BT_CONSTRAINT_STOP_CFM, btScalar(0.f), -1);
+			// 0);
+			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 1);
+			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 2);
+			//hinge->Limit
+			app_scene->add_hinge_constraint(hinge,true);
 		}
 
 		void create_columns()
@@ -152,7 +168,7 @@ namespace octet
 			create_rope(left_column,right_column, start,end, column_size);
 		}
 
-		btRigidBody *create_rope_part(vec3 location, material *part_material)
+		btRigidBody *create_rope_part(vec3 &location, material *part_material)
 		{
 			mat.loadIdentity();
 			mat.translate(location);
@@ -160,7 +176,7 @@ namespace octet
 			return mesh->get_node()->get_rigid_body();
 		}
 
-		void create_rope(btRigidBody *left_column, btRigidBody *right_column, vec3 start, vec3 end, vec3 column_size)
+		void create_rope(btRigidBody *left_column, btRigidBody *right_column, vec3 &start, vec3 &end, vec3 &column_size)
 		{
 			int parts_number = 80;
 
@@ -189,7 +205,7 @@ namespace octet
 
 	public:
 
-		Bridge(ref<visual_scene> App_scene, mat4t Mat, float Ground_level)
+		Bridge(ref<visual_scene> App_scene, mat4t &Mat, float Ground_level)
 		{
 			app_scene = App_scene;
 			mat = Mat;

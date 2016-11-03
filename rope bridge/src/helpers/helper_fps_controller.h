@@ -16,7 +16,7 @@ namespace octet { namespace helpers {
     helper_fps_controller() {
     }
 
-    void init(app *the_app, vec3 Camera_translation = vec3(0, 1.25f, 0),float Velocity = 10.f) {
+    void init(app *the_app, vec3 &Camera_translation = vec3(0, 1.25f, 0),float Velocity = 10.f) {
       this->the_app = the_app;
 	  camera_translation = Camera_translation;
 	  velocity = Velocity;

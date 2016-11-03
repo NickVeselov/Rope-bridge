@@ -667,6 +667,66 @@ namespace octet { namespace scene {
 	{
 		world->addConstraint(c, disableCollisions);
 	}
+
+	void add_generic_6dof_constraint(btGeneric6DofConstraint* dof6, bool disableCollisions = false)
+	{
+		world->addConstraint(dof6, disableCollisions);
+	}
+
+	int collisions_callback()
+	{
+		//CheckForColl
+		//world->performDiscreteCollisionDetection();
+		btNearCallback cb;
+		cb = dispatcher->getNearCallback();
+		return world->getNumCollisionObjects();
+	}
+
+	ContactAddedCallback CollisionCallBack(btManifoldPoint& cp, const btCollisionObject* obj1, int id1, int index1, const btCollisionObject* obj2, int id2, int index2)
+	{
+		std::cout << "Collision" << std::endl;
+		//return 0;
+	}
+
+	void enable_collision_detection()
+	{
+		//gContactAddedCallback = CollisionCallBack;
+	}
+
+
+	//taken from http://www.bulletphysics.org/mediawiki-1.5.8/index.php?title=Collision_Callbacks_and_Triggers
+	void check_for_collisions(int &collision_duration)
+	{
+		int numManifolds = world->getDispatcher()->getNumManifolds();
+		for (int i = 0; i<numManifolds; i++)
+		{
+			btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+			const btCollisionObject* obA = contactManifold->getBody0();
+			const btCollisionObject* obB = contactManifold->getBody1();			
+
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j<numContacts; j++)
+			{
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < -0.0f)
+				{
+					const btVector3& ptA = pt.getPositionWorldOnA();
+					const btVector3& ptB = pt.getPositionWorldOnB();
+					const btVector3& normalOnB = pt.m_normalWorldOnB;
+
+					int fA = obA->getCollisionFlags(),
+						fB = obB->getCollisionFlags();
+
+					if ((fA == btCollisionObject::CF_CHARACTER_OBJECT
+						|| fB == btCollisionObject::CF_CHARACTER_OBJECT) && (collision_duration == 0))
+					{
+						collision_duration = 30;
+						std::cout << "Swlabr! " << std::endl;
+					}
+				}
+			}
+		}
+	}
   };
 }}
 

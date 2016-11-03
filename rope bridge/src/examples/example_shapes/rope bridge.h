@@ -24,6 +24,8 @@ namespace octet {
 
 	float number = 0;
 	btRigidBody *ball;
+	Character ch;
+
   public:
     example_shapes(int argc, char **argv) : app(argc, argv) {
     }
@@ -71,15 +73,18 @@ namespace octet {
 		float player_mass = 2.f;
 
 
-		//mesh_instance *mi = app_scene->add_shape(
-		//	mat,
-		//	new mesh_sphere(vec3(0), player_radius),
-		//	red,
-		//	true, player_mass
-		//);
-		////ball = ball_mesh->get_node()->get_rigid_body();
-		//
-		//player_node = mi->get_node();
+		mesh_instance *mi = app_scene->add_shape(
+			mat,
+			new mesh_sphere(vec3(0), player_radius),
+			red,
+			true, player_mass
+		);
+		ball = mi->get_node()->get_rigid_body();
+		
+		ball->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+		
+		app_scene->enable_collision_detection();
+
 	}
 
 	void move_ball()
@@ -134,6 +139,11 @@ namespace octet {
 	  //app_scene->get_camera_instance(0)->get_node()->rotate(-1.f, vec3(1, 0, 0));
 	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 0.f, 0.1f));
 	  //std::cout << number << std::endl;
+
+	  //std::cout << app_scene->collisions_callback() << std::endl;
+	  app_scene->check_for_collisions(ch.collision_duration);
+	  if (ch.collision_duration > 0)
+		  ch.collision_duration--;
     }
   };
 }
