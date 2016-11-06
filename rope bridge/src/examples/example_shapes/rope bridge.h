@@ -39,10 +39,12 @@ namespace octet {
     /// this is called once OpenGL is initialized
 	void app_init() {
 		mouse_look_helper.init(this, 100.f/360.f, false);
-		fps_helper.init(this, vec3(10.f, 4.f, 0.f));
+		fps_helper.init(this, vec3(0.f, 10.f, 0.f),20.f);
 		
 		app_scene = new visual_scene();
 		app_scene->create_default_camera_and_lights();
+		//light_instance *l = new light_instance()
+		//app_scene->add_light_instance()
 
 		the_camera = app_scene->get_camera_instance(0);
 		the_camera->get_node()->translate(vec3(10, 32, 0));
@@ -72,7 +74,7 @@ namespace octet {
 		//ball
 		mat.loadIdentity();
 		mat.translate(bridge->get_camera_starting_point() + vec3(0, 10,0));
-		//mesh_instance *ball_mesh = app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), red, true);
+		//mesh_instance *ball_mesh = app_scene->add_shape(mat, new mesh_sphere(vec3(3, 3, 3), 3), red, true);
 		
 		//float player_height = 40.f;//1.83f;
 		float player_radius = r.values[11];
@@ -88,24 +90,43 @@ namespace octet {
 		
 		ball->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
-		mat.loadIdentity();
-		mat.translate(bridge->get_camera_starting_point() + vec3(0, 40, 0));
-		mesh_instance *sun_mesh = app_scene->add_shape(
-			mat,
-			new mesh_sphere(vec3(0), player_radius),
-			new material(vec4(1, 1, 0, 1)), true, player_mass
-		);
+		//mat.loadIdentity();
+		//vec3 start_pos = bridge->get_camera_starting_point() + vec3(0, 40, 0);
+		//mat.translate(bridge->get_camera_starting_point() + vec3(0, 40, 0));
+		//mesh_instance *sun_mesh = app_scene->add_shape(
+		//	mat,
+		//	new mesh_sphere(vec3(0), player_radius),
+		//	new material(vec4(1, 1, 0, 1)), true, player_mass
+		//);
 
-		set_spring_constraint(sun_mesh->get_node()->get_rigid_body());
+		//set_spring_constraint(sun_mesh->get_node()->get_rigid_body());
 
 		ch = new CollisionsHandler(app_scene->get_world());
 
+		player_node = ball_mesh->get_node();
 	}
 
-	void set_spring_constraint(btRigidBody *sun_rb)
-	{
+	//void set_spring_constraint(btRigidBody *sun_rb)
+	//{
 
-	}
+	//	//btTransform *f = new btTransform()
+	//	btTransform frameInA;
+	//	frameInA = btTransform::getIdentity();
+	//	frameInA.setOrigin(btVector3(btScalar(0.f), btScalar(0.f), btScalar(0.f)));
+
+	//	btGeneric6DofSpringConstraint *c = new btGeneric6DofSpringConstraint(*sun_rb, frameInA, true);
+	//	c->setLinearLowerLimit(btVector3(5., -5., 5.));
+	//	c->setLinearUpperLimit(btVector3(-5., 5., -5.));
+	//	c->setAngularLowerLimit(btVector3(SIMD_HALF_PI,5., 5.));
+	//	c->setAngularUpperLimit(btVector3(-SIMD_HALF_PI,-5., -50.));
+	//	c->setDbgDrawSize(btScalar(5.f));
+	//	c->enableSpring(2, true);
+	//	c->setStiffness(2, 1.f);
+	//	c->setDamping(2, 0.5f);
+	//	//c->setEquilibriumPoint()
+
+	//	app_scene->add_spring_constraint(c);
+	//}
 
 	void move_ball()
 	{
@@ -142,11 +163,11 @@ namespace octet {
       get_viewport_size(vx, vy);
 	  app_scene->begin_render(vx, vy, vec4(0.53f, 0.8f, 0.976f, 0));
 	  
-	  //scene_node *camera_node = the_camera->get_node();
-	 // mat4t &camera_to_world = camera_node->access_nodeToParent();
-	  //mouse_look_helper.update(camera_to_world);
+	  scene_node *camera_node = the_camera->get_node();
+	  mat4t &camera_to_world = camera_node->access_nodeToParent();
+	  mouse_look_helper.update(camera_to_world);
 
-	  //fps_helper.update(player_node, camera_node);
+	  fps_helper.update(player_node, camera_node);
 
 	  // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
@@ -155,15 +176,7 @@ namespace octet {
 
       // draw the scene
       app_scene->render((float)vx / vy);
-	 // number += 0.5f;
-	  //app_scene->get_camera_instance(0)->get_node()->rotate(-1.f, vec3(1, 0, 0));
-	  //app_scene->get_camera_instance(0)->get_node()->translate(vec3(0.f, 0.f, 0.1f));
-	  //std::cout << number << std::endl;
 
-	  //std::cout << app_scene->collisions_callback() << std::endl;
-	  //app_scene->check_for_collisions();
-	  //if (ch.collision_duration > 0)
-		 // ch.collision_duration--;
 	  ch->handle();
     }
   };

@@ -127,21 +127,11 @@ namespace octet
 			btVector3 axisA(0.f, 0.f, 1.f);
 			btVector3 axisB(0.f, 0.f, 1.f);
 
-			//btGeneric6DofConstraint* dof6 = new btGeneric6DofConstraint()
-				
-			//previous_rb->setActivationState(DISABLE_DEACTIVATION);
-			//current_rb->setActivationState(DISABLE_DEACTIVATION);
-
 			btHingeConstraint *hinge = new btHingeConstraint(*previous_rb, *current_rb, pivotA, pivotB, axisA, axisB);
 			hinge->setDbgDrawSize(btScalar(5.f));
 			hinge->setLimit(-0.f*SIMD_HALF_PI, 0.f*SIMD_HALF_PI);// , 1.f, 0.3f, 0.f);
 			hinge->setBreakingImpulseThreshold(break_limit);
-			//hinge->setParam(BT_CONSTRAINT_CFM, 0.f, 0);
 			hinge->setParam(BT_CONSTRAINT_STOP_CFM, btScalar(0.f), -1);
-			// 0);
-			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 1);
-			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 2);
-			//hinge->Limit
 			app_scene->add_hinge_constraint(hinge);
 		}
 

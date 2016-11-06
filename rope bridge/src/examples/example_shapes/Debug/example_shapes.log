@@ -7,7 +7,7 @@ d:\game development\study\projects\rope-bridge---constraints-assignment\rope bri
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\bridge.h(47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\bridge.h(53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\bridge.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\bridge.h(224): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\bridge.h(214): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\collisions handler.h(107): warning C4018: '<': signed/unsigned mismatch
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\collisions handler.h(110): warning C4018: '<': signed/unsigned mismatch
 d:\game development\study\projects\rope-bridge---constraints-assignment\rope bridge\src\examples\example_shapes\collisions handler.h(113): warning C4018: '<': signed/unsigned mismatch
