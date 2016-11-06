@@ -39,7 +39,7 @@ namespace octet {
     /// this is called once OpenGL is initialized
 	void app_init() {
 		mouse_look_helper.init(this, 100.f/360.f, false);
-		fps_helper.init(this, vec3(0.f, 10.f, 0.f),20.f);
+		fps_helper.init(this, vec3(0.f, 20.f, 0.f),20.f);
 		
 		app_scene = new visual_scene();
 		app_scene->create_default_camera_and_lights();
@@ -57,15 +57,15 @@ namespace octet {
 		material *red = new material(vec4(1, 0, 0, 1));
 		material *water = new material(vec4(0, 0, 1, 1));
 
+		CSVReader r;
+		r.read_file("test.csv");
+
 		mat4t mat;
 
 		// ground
 		mat.loadIdentity();
 		mat.translate(0, 0, 0);
-		app_scene->add_shape(mat, new mesh_box(vec3(400, 1, 200)), water, false);
-
-		CSVReader r;
-		r.read_file("test.csv");
+		app_scene->add_shape(mat, new mesh_box(vec3(r.values[14], r.values[15], r.values[16])), water, false);
 
 		//bridge
 		bridge = new Bridge(app_scene, mat, 1);
@@ -103,7 +103,7 @@ namespace octet {
 
 		ch = new CollisionsHandler(app_scene->get_world());
 
-		player_node = ball_mesh->get_node();
+		//player_node = ball_mesh->get_node();
 	}
 
 	//void set_spring_constraint(btRigidBody *sun_rb)
@@ -163,11 +163,11 @@ namespace octet {
       get_viewport_size(vx, vy);
 	  app_scene->begin_render(vx, vy, vec4(0.53f, 0.8f, 0.976f, 0));
 	  
-	  scene_node *camera_node = the_camera->get_node();
-	  mat4t &camera_to_world = camera_node->access_nodeToParent();
-	  mouse_look_helper.update(camera_to_world);
+	  //scene_node *camera_node = the_camera->get_node();
+	  //mat4t &camera_to_world = camera_node->access_nodeToParent();
+	  //mouse_look_helper.update(camera_to_world);
 
-	  fps_helper.update(player_node, camera_node);
+	  //fps_helper.update(player_node, camera_node);
 
 	  // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
