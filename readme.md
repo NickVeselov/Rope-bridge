@@ -22,3 +22,4 @@ The source code files, that were designed for this application are:
 5. helper_fps_controller.h
  This file is the core file of the framework, but there were made some changes, because of the limits of the original implementation (constants used instead of parameters).
  
+Most of implementation ideas were taken from the book "Learning game physics with Bullet physics and OpenGL" published by Packt and Bullet online documentation. Also, coursemates Witek Gawlowski, Matthew Duddington, Robert Doig and Louis Bennette gived me few tips with undestanding the constraints concept and bullet syntax.
