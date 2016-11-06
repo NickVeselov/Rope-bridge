@@ -73,7 +73,7 @@ namespace octet {
 
 		//ball
 		mat.loadIdentity();
-		mat.translate(bridge->get_camera_starting_point() + vec3(0, 10,0));
+		mat.translate(bridge->get_camera_starting_point() + vec3(0, 20,0));
 		//mesh_instance *ball_mesh = app_scene->add_shape(mat, new mesh_sphere(vec3(3, 3, 3), 3), red, true);
 		
 		//float player_height = 40.f;//1.83f;
@@ -103,7 +103,7 @@ namespace octet {
 
 		ch = new CollisionsHandler(app_scene->get_world());
 
-		//player_node = ball_mesh->get_node();
+		player_node = ball_mesh->get_node();
 	}
 
 	//void set_spring_constraint(btRigidBody *sun_rb)
@@ -163,11 +163,11 @@ namespace octet {
       get_viewport_size(vx, vy);
 	  app_scene->begin_render(vx, vy, vec4(0.53f, 0.8f, 0.976f, 0));
 	  
-	  //scene_node *camera_node = the_camera->get_node();
-	  //mat4t &camera_to_world = camera_node->access_nodeToParent();
-	  //mouse_look_helper.update(camera_to_world);
+	  scene_node *camera_node = the_camera->get_node();
+	  mat4t &camera_to_world = camera_node->access_nodeToParent();
+	  mouse_look_helper.update(camera_to_world);
 
-	  //fps_helper.update(player_node, camera_node);
+	  fps_helper.update(player_node, camera_node);
 
 	  // update matrices. assume 30 fps.
       app_scene->update(1.0f/30);
