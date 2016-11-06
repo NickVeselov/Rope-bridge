@@ -8,12 +8,6 @@ namespace octet
 		rope,
 		column
 	};
-	
-	//ball
-	struct Character
-	{
-		int collision_duration = 0;
-	};
 
 	class Bridge
 	{

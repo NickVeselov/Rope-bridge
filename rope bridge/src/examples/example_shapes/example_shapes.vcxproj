@@ -283,6 +283,7 @@
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
     <ClInclude Include="bridge.h" />
+    <ClInclude Include="collisions handler.h" />
     <ClInclude Include="rope bridge.h" />
   </ItemGroup>
   <ItemGroup>

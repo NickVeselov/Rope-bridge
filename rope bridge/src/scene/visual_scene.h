@@ -47,6 +47,7 @@ namespace octet { namespace scene {
     ref<bump_shader> object_shader;
     ref<bump_shader> skin_shader;
 
+
     #ifdef OCTET_BULLET
       btDefaultCollisionConfiguration config;       /// setup for the world
       btCollisionDispatcher *dispatcher;            /// handler for collisions between objects
@@ -278,6 +279,9 @@ namespace octet { namespace scene {
       assert(is_power_of_two(debug_line_buffer.size()));
       memset(&debug_line_buffer[0], 0, debug_line_buffer.size() * sizeof(debug_line_buffer[0]));
       debug_in_ptr = 0;
+
+	  //CollisionsHandler *ch = new CollisionsHandler(world);
+	  //ch = new CollisionsHandler(world);
 
       #ifdef OCTET_BULLET
         dispatcher = new btCollisionDispatcher(&config);
@@ -682,50 +686,9 @@ namespace octet { namespace scene {
 		return world->getNumCollisionObjects();
 	}
 
-	ContactAddedCallback CollisionCallBack(btManifoldPoint& cp, const btCollisionObject* obj1, int id1, int index1, const btCollisionObject* obj2, int id2, int index2)
+	btDiscreteDynamicsWorld *get_world()
 	{
-		std::cout << "Collision" << std::endl;
-		//return 0;
-	}
-
-	void enable_collision_detection()
-	{
-		//gContactAddedCallback = CollisionCallBack;
-	}
-
-
-	//taken from http://www.bulletphysics.org/mediawiki-1.5.8/index.php?title=Collision_Callbacks_and_Triggers
-	void check_for_collisions(int &collision_duration)
-	{
-		int numManifolds = world->getDispatcher()->getNumManifolds();
-		for (int i = 0; i<numManifolds; i++)
-		{
-			btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-			const btCollisionObject* obA = contactManifold->getBody0();
-			const btCollisionObject* obB = contactManifold->getBody1();			
-
-			int numContacts = contactManifold->getNumContacts();
-			for (int j = 0; j<numContacts; j++)
-			{
-				btManifoldPoint& pt = contactManifold->getContactPoint(j);
-				if (pt.getDistance() < -0.0f)
-				{
-					const btVector3& ptA = pt.getPositionWorldOnA();
-					const btVector3& ptB = pt.getPositionWorldOnB();
-					const btVector3& normalOnB = pt.m_normalWorldOnB;
-
-					int fA = obA->getCollisionFlags(),
-						fB = obB->getCollisionFlags();
-
-					if ((fA == btCollisionObject::CF_CHARACTER_OBJECT
-						|| fB == btCollisionObject::CF_CHARACTER_OBJECT) && (collision_duration == 0))
-					{
-						collision_duration = 30;
-						std::cout << "Swlabr! " << std::endl;
-					}
-				}
-			}
-		}
+		return world;
 	}
   };
 }}

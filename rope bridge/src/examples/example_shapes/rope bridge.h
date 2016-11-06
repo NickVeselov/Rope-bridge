@@ -6,6 +6,7 @@
 //
 
 #include "bridge.h"
+#include "collisions handler.h"
 
 namespace octet {
   /// Scene containing a box with octet.
@@ -24,7 +25,8 @@ namespace octet {
 
 	float number = 0;
 	btRigidBody *ball;
-	Character ch;
+
+	CollisionsHandler *ch;
 
   public:
     example_shapes(int argc, char **argv) : app(argc, argv) {
@@ -82,8 +84,8 @@ namespace octet {
 		ball = mi->get_node()->get_rigid_body();
 		
 		ball->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-		
-		app_scene->enable_collision_detection();
+
+		ch = new CollisionsHandler(app_scene->get_world());
 
 	}
 
@@ -141,9 +143,10 @@ namespace octet {
 	  //std::cout << number << std::endl;
 
 	  //std::cout << app_scene->collisions_callback() << std::endl;
-	  app_scene->check_for_collisions(ch.collision_duration);
-	  if (ch.collision_duration > 0)
-		  ch.collision_duration--;
+	  //app_scene->check_for_collisions();
+	  //if (ch.collision_duration > 0)
+		 // ch.collision_duration--;
+	  ch->handle();
     }
   };
 }
