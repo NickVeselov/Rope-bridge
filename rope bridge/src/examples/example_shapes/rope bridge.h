@@ -7,6 +7,7 @@
 
 #include "bridge.h"
 #include "collisions handler.h"
+#include "read csv file.h"
 
 namespace octet {
   /// Scene containing a box with octet.
@@ -44,11 +45,11 @@ namespace octet {
 		app_scene->create_default_camera_and_lights();
 
 		the_camera = app_scene->get_camera_instance(0);
-		the_camera->get_node()->translate(vec3(0, 32, 0));
+		the_camera->get_node()->translate(vec3(10, 32, 0));
 		//how far can you see
 		the_camera->set_far_plane(1000);
 
-		app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 80, 60));
+		the_camera->get_node()->translate(vec3(0, 80, 80));
 
 		// app_scene
 		material *red = new material(vec4(1, 0, 0, 1));
@@ -61,9 +62,12 @@ namespace octet {
 		mat.translate(0, 0, 0);
 		app_scene->add_shape(mat, new mesh_box(vec3(400, 1, 200)), water, false);
 
+		CSVReader r;
+		r.read_file("test.csv");
+
 		//bridge
 		bridge = new Bridge(app_scene, mat, 1);
-		bridge->create_bridge(30);
+		bridge->create_bridge(r.values);
 
 		//ball
 		mat.loadIdentity();
@@ -71,21 +75,35 @@ namespace octet {
 		//mesh_instance *ball_mesh = app_scene->add_shape(mat, new mesh_sphere(vec3(2, 2, 2), 2), red, true);
 		
 		//float player_height = 40.f;//1.83f;
-		float player_radius = 2.f;
-		float player_mass = 2.f;
+		float player_radius = r.values[11];
+		float player_mass = r.values[12];
 
 
-		mesh_instance *mi = app_scene->add_shape(
+		mesh_instance *ball_mesh = app_scene->add_shape(
 			mat,
 			new mesh_sphere(vec3(0), player_radius),
-			red,
-			true, player_mass
+			red, true, player_mass
 		);
-		ball = mi->get_node()->get_rigid_body();
+		ball = ball_mesh->get_node()->get_rigid_body();
 		
 		ball->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
+		mat.loadIdentity();
+		mat.translate(bridge->get_camera_starting_point() + vec3(0, 40, 0));
+		mesh_instance *sun_mesh = app_scene->add_shape(
+			mat,
+			new mesh_sphere(vec3(0), player_radius),
+			new material(vec4(1, 1, 0, 1)), true, player_mass
+		);
+
+		set_spring_constraint(sun_mesh->get_node()->get_rigid_body());
+
 		ch = new CollisionsHandler(app_scene->get_world());
+
+	}
+
+	void set_spring_constraint(btRigidBody *sun_rb)
+	{
 
 	}
 

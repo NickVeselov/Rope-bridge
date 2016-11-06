@@ -1,0 +1,14 @@
+Left cliff location - x,-75
+Left cliff location - y,50
+Left cliff location - z,0
+Cliff size - x,100
+Cliff size - y,100
+Cliff size - z,200
+Bridge plank number,20
+Distance between planks,2
+Plank size - x,2
+Plank size - y,1
+Plank size - z,20
+Ball radius,4
+Ball mass,2
+Bridge impulse break limit,50

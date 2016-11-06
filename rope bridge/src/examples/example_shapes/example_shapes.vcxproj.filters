@@ -434,6 +434,9 @@
     <ClInclude Include="collisions handler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="read csv file.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

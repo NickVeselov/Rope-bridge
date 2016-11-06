@@ -58,16 +58,20 @@ namespace octet {
 		std::vector<ObjectsPair> previous_frame;
 		std::vector<ObjectsPair> current_frame;
 
+		bool textOutput;
+
 		void call_collision_event(ObjectsPair objects)
 		{
 			//if ((objects.getA()->getCollisionFlags() == btCollisionObject::CF_CHARACTER_OBJECT) ||
 			//	(objects.getB()->getCollisionFlags() == btCollisionObject::CF_CHARACTER_OBJECT))
-			std::cout << "Collision! Distance = " << objects.distance << std::endl;
+			if (textOutput)
+				std::cout << "Collision! Distance = " << objects.distance << std::endl;
 		}
 
 		void call_separation_event(ObjectsPair objects)
 		{
-			std::cout << "Separation! Distance = " << objects.distance << std::endl;
+			if (textOutput)
+				std::cout << "Separation! Distance = " << objects.distance << std::endl;
 		}
 
 		void find_collision_pairs()
@@ -119,9 +123,10 @@ namespace octet {
 
 	public:
 
-		CollisionsHandler(btDiscreteDynamicsWorld *World)
+		CollisionsHandler(btDiscreteDynamicsWorld *World, bool enableTextOutput = false)
 		{
 			world = World;
+			textOutput = enableTextOutput;
 		}
 
 		void handle()

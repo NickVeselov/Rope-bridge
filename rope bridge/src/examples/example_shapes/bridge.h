@@ -40,32 +40,32 @@ namespace octet
 		int size;
 		float ground_level;
 		
-		void set_variables()
+		void set_variables(std::vector<int> values)
 		{
-			distance_between = 1.0f;
+			distance_between = values[7];
 
-			plank_size = vec3(1, 0.5f, 10);
+			plank_size = vec3(values[8], values[9], values[10]);
 			plank_material = new material(vec4(0.54f, 0.27f, 0.074f, 1));
 			plank_half_size = plank_size / 2.f;
 
 			//cliff_material = new material(vec4(0.586f, 0.55f, 0.598f, 1));
 			cliff_material = new material(vec4(0, 0.39f, 0, 1));
-			cliff_size = vec3(100, 100, 200);
+			cliff_size = vec3(values[3], values[4], values[5]);
 			cliff_half_size = cliff_size / 2.f;
 
 		}
 
-		void create_cliffs(int size)
+		void create_cliffs(std::vector<int> values)
 		{
 			mat.loadIdentity();
-			left_cliff_location = vec3(-cliff_half_size.x()*3/2.f, cliff_half_size.y() + ground_level, 0);
+			left_cliff_location = vec3(values[0], values[1] + ground_level, values[2]);
 			mat.translate(left_cliff_location);
 			left_cliff_mesh = app_scene->add_shape(mat, new mesh_box(cliff_half_size), cliff_material,false);
 			left_cliff_rb = left_cliff_mesh->get_node()->get_rigid_body();
 
 			mat.loadIdentity();
 			right_cliff_location = vec3(left_cliff_location.x() + 2*distance_between + plank_size.x() + cliff_size.x() 
-				+ (size - 1)*(distance_between + plank_size.x()), left_cliff_location.y(), left_cliff_location.z());
+				+ (values[6] - 1)*(distance_between + plank_size.x()), left_cliff_location.y(), left_cliff_location.z());
 			mat.translate(right_cliff_location);
 			right_cliff_mesh = app_scene->add_shape(mat, new mesh_box(cliff_half_size), cliff_material, false);
 			right_cliff_rb = right_cliff_mesh->get_node()->get_rigid_body();
@@ -129,8 +129,8 @@ namespace octet
 
 			//btGeneric6DofConstraint* dof6 = new btGeneric6DofConstraint()
 				
-			previous_rb->setActivationState(DISABLE_DEACTIVATION);
-			current_rb->setActivationState(DISABLE_DEACTIVATION);
+			//previous_rb->setActivationState(DISABLE_DEACTIVATION);
+			//current_rb->setActivationState(DISABLE_DEACTIVATION);
 
 			btHingeConstraint *hinge = new btHingeConstraint(*previous_rb, *current_rb, pivotA, pivotB, axisA, axisB);
 			hinge->setDbgDrawSize(btScalar(5.f));
@@ -142,60 +142,64 @@ namespace octet
 			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 1);
 			//hinge->setParam(BT_CONSTRAINT_STOP_CFM, 0, 2);
 			//hinge->Limit
-			app_scene->add_hinge_constraint(hinge,true);
+			app_scene->add_hinge_constraint(hinge);
 		}
 
-		void create_columns()
-		{
-			vec3 start = vec3(left_cliff_location.x() + cliff_half_size.x() - 2, left_cliff_location.y() + cliff_half_size.y(), left_cliff_location.z());
-			vec3 end = vec3(right_cliff_location.x() - cliff_half_size.x() + 2, right_cliff_location.y() + cliff_half_size.y(), right_cliff_location.z());
+		#pragma region Discarded
 
-			vec3 column_size = vec3(0.5f, 2.f, 0.5f);
-			mat.loadIdentity();
-			mat.translate(start + vec3(0, column_size.y()/2.f, 0));
-			btRigidBody *left_column = app_scene->add_shape(mat, new mesh_box(column_size), new material(vec4(1, 1, 1, 1)), false)->get_node()->get_rigid_body();
+		//btRigidBody *create_rope_part(vec3 &location, material *part_material)
+		//{
+		//	mat.loadIdentity();
+		//	mat.translate(location);
+		//	mesh_instance *mesh = app_scene->add_shape(mat, new mesh_box(vec3(rope_part_size)), part_material, true);
+		//	return mesh->get_node()->get_rigid_body();
+		//}
 
-			mat.loadIdentity();
-			mat.translate(end + vec3(0, column_size.y()/2.f, 0));
-			btRigidBody *right_column = app_scene->add_shape(mat, new mesh_box(column_size), new material(vec4(1, 1, 1, 1)), false)->get_node()->get_rigid_body();
+		//void create_rope(btRigidBody *left_column, btRigidBody *right_column, vec3 &start, vec3 &end, vec3 &column_size)
+		//{
+		//	int parts_number = 80;
 
-			create_rope(left_column,right_column, start,end, column_size);
-		}
+		//	rope_part_size = vec3((end - start).x() / 2.f/parts_number, 0.2f, 0.2f);
+		//	material *rope_material = new material(vec4(0.9, 0.9, 0.9, 1));
+		//	//cliff-bridge hinge
+		//	vec3 from = start + vec3(0, 2 * column_size.y() + rope_part_size.y(), 0);
+		//	vec3 to = end + vec3(0, 2 * column_size.y() + rope_part_size.y(), 0);
 
-		btRigidBody *create_rope_part(vec3 &location, material *part_material)
-		{
-			mat.loadIdentity();
-			mat.translate(location);
-			mesh_instance *mesh = app_scene->add_shape(mat, new mesh_box(vec3(rope_part_size)), part_material, true);
-			return mesh->get_node()->get_rigid_body();
-		}
+		//	vec3 location = vec3(from.x() + rope_part_size.x(), from.y(), from.z());
+		//	btRigidBody *current, *previous = create_rope_part(location, rope_material);
 
-		void create_rope(btRigidBody *left_column, btRigidBody *right_column, vec3 &start, vec3 &end, vec3 &column_size)
-		{
-			int parts_number = 80;
+		//	bind_bodies(left_column, column, previous, rope,10000.f);
+		//	
+		//	for (int i = 1; i < parts_number; i++)
+		//	{
+		//		location += 2 * rope_part_size.x();
+		//		current = create_rope_part(location, rope_material);
 
-			rope_part_size = vec3((end - start).x() / 2.f/parts_number, 0.2f, 0.2f);
-			material *rope_material = new material(vec4(0.9, 0.9, 0.9, 1));
-			//cliff-bridge hinge
-			vec3 from = start + vec3(0, 2 * column_size.y() + rope_part_size.y(), 0);
-			vec3 to = end + vec3(0, 2 * column_size.y() + rope_part_size.y(), 0);
+		//		bind_bodies(previous, rope, current, rope, 10000.f);
+		//		previous = current;
 
-			vec3 location = vec3(from.x() + rope_part_size.x(), from.y(), from.z());
-			btRigidBody *current, *previous = create_rope_part(location, rope_material);
+		//	}
+		//	bind_bodies(previous, rope, right_column, column, 10000.f);
+		//}
 
-			bind_bodies(left_column, column, previous, rope,10000.f);
-			
-			for (int i = 1; i < parts_number; i++)
-			{
-				location += 2 * rope_part_size.x();
-				current = create_rope_part(location, rope_material);
+		//void create_columns()
+		//{
+		//	vec3 start = vec3(left_cliff_location.x() + cliff_half_size.x() - 2, left_cliff_location.y() + cliff_half_size.y(), left_cliff_location.z());
+		//	vec3 end = vec3(right_cliff_location.x() - cliff_half_size.x() + 2, right_cliff_location.y() + cliff_half_size.y(), right_cliff_location.z());
 
-				bind_bodies(previous, rope, current, rope, 10000.f);
-				previous = current;
+		//	vec3 column_size = vec3(0.5f, 2.f, 0.5f);
+		//	mat.loadIdentity();
+		//	mat.translate(start + vec3(0, column_size.y() / 2.f, 0));
+		//	btRigidBody *left_column = app_scene->add_shape(mat, new mesh_box(column_size), new material(vec4(1, 1, 1, 1)), false)->get_node()->get_rigid_body();
 
-			}
-			bind_bodies(previous, rope, right_column, column, 10000.f);
-		}
+		//	mat.loadIdentity();
+		//	mat.translate(end + vec3(0, column_size.y() / 2.f, 0));
+		//	btRigidBody *right_column = app_scene->add_shape(mat, new mesh_box(column_size), new material(vec4(1, 1, 1, 1)), false)->get_node()->get_rigid_body();
+
+		//	create_rope(left_column, right_column, start, end, column_size);
+		//}
+
+		#pragma endregion
 
 	public:
 
@@ -204,19 +208,20 @@ namespace octet
 			app_scene = App_scene;
 			mat = Mat;
 			ground_level = Ground_level;
-			set_variables();
 		}
 
 
-		void create_bridge(int planks_number)
+		void create_bridge(std::vector<int> values)
 		{
-			create_cliffs(planks_number);
+			int planks_number = values[6];
+			set_variables(values);
+			create_cliffs(values);
 
 			//cliff-bridge hinge
 			vec3 location = vec3(left_cliff_location.x() + distance_between + plank_size.x() + cliff_half_size.x(),
 				left_cliff_location.y() + cliff_half_size.y() - plank_half_size.y(), left_cliff_location.z());
 			
-			float break_limit = 20.f;
+			float break_limit = values[13];
 
 			btRigidBody *previous_body = create_plank(location);
 			bind_bodies(left_cliff_rb, cliff, previous_body, plank, break_limit);
