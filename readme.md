@@ -20,7 +20,7 @@ The source code files, that were designed for this application are:
 3. read scv file.h
  Reader of the SCV files.
 4. rope bridge.h
- Contains inherited from the app class, which handles initialization of the game and simulate ('draw world') function, which is called every frame. 
+ Contains the class, inherited from the app class, which handles initialization of the game and simulate ('draw world') function, which is called every frame. 
 5. helper_fps_controller.h
  This file is the core file of the framework, but there were made some changes, because of the limits of the original implementation (constants used instead of parameters).
  
