@@ -677,15 +677,6 @@ namespace octet { namespace scene {
 		world->addConstraint(dof6, disableCollisions);
 	}
 
-	int collisions_callback()
-	{
-		//CheckForColl
-		//world->performDiscreteCollisionDetection();
-		btNearCallback cb;
-		cb = dispatcher->getNearCallback();
-		return world->getNumCollisionObjects();
-	}
-
 	btDiscreteDynamicsWorld *get_world()
 	{
 		return world;
